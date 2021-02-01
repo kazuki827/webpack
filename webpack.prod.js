@@ -4,7 +4,7 @@ const { merge } = require('webpack-merge');
 const commonConfig = require('./webpack.common.js');
 // JavaScritpt を圧縮するプラグイン
 const TerserPlugin = require('terser-webpack-plugin');
-// CSS を最適化するプラグイン
+// CSS を最適化するプラグイン (cssnanoを利用)
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 // 開発用の設定と共通設定（commonConfig）をマージする

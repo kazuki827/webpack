@@ -9,7 +9,8 @@ const commonConfig = require('./webpack.common.js');
 module.exports = merge(commonConfig, {
   // モードの設定（モードを指定しないとwebpack実行時に警告が出る）
   mode: 'development',
-  // watch モードを有効にする
+  // watch モード(fileを監視するモード)を有効にする
+  // fileを変更したら自動でビルド
   watch: true,
   // ソースマップ
   devtool: 'cheap-module-eval-source-map',

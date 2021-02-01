@@ -5,6 +5,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // バンドルを読み込んだ HTML を出力するプラグイン
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // バンドルされる CSS を別の CSS ファイルに抽出する
+// => 1 出力されるJSのファイルサイズが大きくなるため、ファイルの読み込み時間が長くなりJSが実行されるまで時間がかかる。
+// => 2 cssがjsに含まれため、cssがキャッシュできない。
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
@@ -20,7 +22,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
     // 出力するファイル名
     // [name] には entry に指定した名前が入る
-    // 今回、entry に app と another を指定しているため、app.[contenthash].js と another.bundle.js が出力される
+    // 今回、entry に app と another を指定しているため、app.[contenthash].js と another.[contenthash].js が出力される
     // [contenthash] には出力するファイル毎に固有のハッシュが入る => ブラウザキャッシュ対策
     filename: 'js/[name].[contenthash].js',
     // splitChunksPlugin など、エントリーポイント以外から出力されるファイル名
@@ -88,8 +90,8 @@ module.exports = {
         // ローダーの処理対象ファイル
         test: /\.scss$/,
         // 利用するローダー。以下の順番で実行される。(指定した順番の逆から実行される。)
-        // 1. sass-loader
-        // 2. postcss-loader // ベンダープレフィックス(.browserslistrc)
+        // 1. sass-loader (productionモードの時は自動で圧縮)
+        // 2. postcss-loader (ベンダープレフィックス .browserslistrc)
         // 3. css-loader
         // 4. MiniCssExtractPlugin.loader
         use: [
@@ -141,7 +143,7 @@ module.exports = {
       // テンプレート
       template: './src/html/index.html',
       // どのエントリーポイントから出力されるファイルを読み込んだ HTML を出力するのかを指定する
-      // 今回の場合、app から出力される app.bundle.js を読み込んだ HTML を出力する
+      // 今回の場合、app から出力される app.[contenthash].js を読み込んだ HTML を出力する
       chunks: ['app'],
     }),
     // バンドルを読み込んだ HTML を出力する
@@ -151,7 +153,7 @@ module.exports = {
       // テンプレート
       template: './src/html/another.html',
       // どのエントリーポイントから出力されるファイルを読み込んだ HTML を出力するのかを指定する
-      // 今回の場合、another から出力される another.bundle.js を読み込んだ HTML を出力する
+      // 今回の場合、another から出力される another.[contenthash].js を読み込んだ HTML を出力する
       chunks: ['another'],
     }),
     // バンドルされる CSS を別の CSS ファイルに抽出する
